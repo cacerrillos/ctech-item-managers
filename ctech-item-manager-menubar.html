@@ -154,6 +154,7 @@
         'ctech-select': '_doShowFabs'
       },
       _doAdd: function(e) {
+        this.$.selector.select();
         this._hideFabs();
         this.fire('ctech-item-manager-do-add');
       },
