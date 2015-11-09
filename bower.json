@@ -4,7 +4,7 @@
     "Carlos Cerrillos <carlos@cerrillostech.com>"
   ],
   "description": "",
-  "main": "ctech-item-managers",
+  "main": "ctech-item-managers.html",
   "moduleType": [],
   "license": "Closed Source",
   "homepage": "",
@@ -17,9 +17,9 @@
     "tests"
   ],
   "dependencies": {
-    "iron-elements": "PolymerElements/iron-elements#~1.0.4",
-    "neon-elements": "PolymerElements/neon-elements#~1.0.0",
-    "paper-elements": "PolymerElements/paper-elements#~1.0.5",
+    "iron-elements": "PolymerElements/iron-elements#~1",
+    "neon-elements": "PolymerElements/neon-elements#~1",
+    "paper-elements": "PolymerElements/paper-elements#~1",
     "polymer": "~1",
     "neon-animation": "PolymerElements/neon-animation#~1"
   }
