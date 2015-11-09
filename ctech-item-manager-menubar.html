@@ -1,0 +1,214 @@
+<!doctype html>
+<dom-module id="ctech-item-manager-menubar">
+  <link rel="import" href="../polymer/polymer.html">
+  <link rel="import" href="../paper-tabs/paper-tabs.html">
+  <link rel="import" href="../paper-material/paper-material.html">
+  <link rel="import" href="../paper-fab/paper-fab.html">
+  <link rel="import" href="../ctech-menubar-selector/ctech-menubar-selector.html">
+  <link rel="import" href="../iron-icons/iron-icons.html">
+  <link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+  <link rel="import" href="../neon-animation/animations/transform-animation.html">
+  <link rel="import" href="../neon-animation/animations/fade-in-animation.html">
+  <link rel="import" href="../neon-animation/animations/fade-out-animation.html">
+  <template>
+    <style>
+      :host {
+        --ctech-tab-color: var(--default-primary-color);
+        --ctech-tab-ink: var(--paper-grey-300);
+      }
+      paper-material {
+
+        margin-bottom: 42px;
+
+        padding: 5px;
+        padding-top: 32px;
+        padding-bottom: 32px;
+
+        background-color: white;
+      }
+      paper-fab.add {
+        position: absolute;
+        bottom: -28px;
+        right: 8px;
+        z-index: 5;
+        --paper-fab-background: var(--paper-light-green-500);
+      }
+      paper-fab.edit {
+        position: absolute;
+        bottom: -28px;
+        right: 132px;
+        z-index: 3;
+        --paper-fab-background: var(--paper-blue-500);
+      }
+      paper-fab.delete {
+        position: absolute;
+        bottom: -28px;
+        right: 70px;
+        z-index: 4;
+        --paper-fab-background: var(--paper-red-800);
+      }
+    </style>
+    <paper-material>
+      <paper-fab icon="icons:add" class="add" on-click="_doAdd"></paper-fab>
+      <paper-fab id="editButton" icon="icons:create" class="edit" on-click="_doEdit"></paper-fab>
+      <paper-fab id="deleteButton" icon="icons:delete" class="delete" on-click="_doDelete"></paper-fab>
+      <ctech-menubar-selector
+        class="flex"
+        id="selector"
+        items="[[items]]"
+        selected="{{selected}}"
+        attr-for-selected="[[attrForSelected]]"
+        attr-for-text="[[attrForText]]"
+        no-bar
+        scrollable></ctech-menubar-selector>
+    </paper-material>
+  </template>
+  <script>
+    Polymer({
+      is: "ctech-item-manager-menubar",
+      behaviors: [
+        Polymer.NeonAnimationRunnerBehavior
+      ],
+      properties: {
+        items: {
+          type: Object
+        },
+        attrForSelected: {
+          type: String,
+          value: "id"
+        },
+        attrForText: {
+          type: String,
+          value: "name"
+        },
+        selected: {
+          type: Object,
+          notify: true
+        },
+        _showFabs: {
+          type: Boolean,
+          value: false
+        },
+        _animationStarted: {
+          type: Boolean,
+          value: false
+        },
+        _animationOneDone: {
+          type: Boolean,
+          value: false
+        },
+        _animationTwoDone: {
+          type: Boolean,
+          value: false
+        },
+        animationConfig: {
+          value: function() {
+            return {
+              'entry_edit': {
+                name: 'transform-animation',
+                node: this.$.editButton,
+                transformFrom: 'translateX(200%)',
+                transformTo: 'none'
+              },
+              'entry_edit_o': {
+                name: 'fade-in-animation',
+                node: this.$.editButton
+              },
+              'entry_delete': {
+                name: 'transform-animation',
+                node: this.$.deleteButton,
+                transformFrom: 'translateX(100%)',
+                transformTo: 'none'
+              },
+              'entry_delete_o': {
+                name: 'fade-in-animation',
+                node: this.$.deleteButton
+              },
+              'exit_edit': {
+                name: 'transform-animation',
+                node: this.$.editButton,
+                transformFrom: 'none',
+                transformTo: 'translateX(220%)'
+              },
+              'exit_edit_o': {
+                name: 'fade-out-animation',
+                node: this.$.editButton
+              },
+              'exit_delete': {
+                name: 'transform-animation',
+                node: this.$.deleteButton,
+                transformFrom: 'none',
+                transformTo: 'translateX(110%)'
+              },
+              'exit_delete_o': {
+                name: 'fade-out-animation',
+                node: this.$.deleteButton
+              }
+            }
+          }
+        }
+      },
+      listeners: {
+        'neon-animation-finish': '_onNeonAnimationFinish',
+        'ctech-items-changed': '_hideFabs',
+        'ctech-select': '_doShowFabs'
+      },
+      _doAdd: function(e) {
+        this._hideFabs();
+        this.fire('ctech-item-manager-do-add');
+      },
+      _doEdit: function(e) {
+        this.fire('ctech-item-manager-do-edit', { item: this.$.selector.selected });
+      },
+      _doDelete: function(e) {
+        this.fire('ctech-item-manager-do-delete', { item: this.$.selector.selected });
+      },
+      onHouseSelected: function(e) {
+        this._doShowFabs();
+      },
+      _doShowFabs: function() {
+        if(!this._animationStarted && !this._showFabs) {
+          this._animationStarted = true;
+          this._showFabs = true;
+          this.$.editButton.style.display = 'inline-block';
+          this.$.deleteButton.style.display = 'inline-block';
+          this.playAnimation('entry_edit', 'entry_edit');
+          this.playAnimation('entry_edit_o', 'entry_edit_o');
+          this.playAnimation('entry_delete', 'entry_delete');
+          this.playAnimation('entry_delete_o', 'entry_delete_o');
+        }
+      },
+      _hideFabs: function() {
+        if(!this._animationStarted && this._showFabs) {
+          this._animationStarted = true;
+          this._showFabs = false;
+          this.playAnimation('exit_edit', 'exit_edit');
+          this.playAnimation('exit_edit_o', 'exit_edit_o');
+          this.playAnimation('exit_delete', 'exit_delete');
+          this.playAnimation('exit_delete_o', 'exit_delete_o');
+        }
+      },
+      _onNeonAnimationFinish: function(e, a) {
+        if(a == 'entry_edit' || a == 'exit_edit') {
+          this._animationOneDone = true;
+        }
+        if(a == 'entry_delete' || a == 'exit_delete') {
+          this._animationTwoDone = true;
+        }
+        if(this._animationOneDone && this._animationTwoDone) {
+          this._animationOneDone = false;
+          this._animationTwoDone = false;
+          this._animationStarted = false;
+          if(!this._showFabs) {
+            this.$.editButton.style.display = 'none';
+            this.$.deleteButton.style.display = 'none';
+          }
+        }
+      },
+      ready: function() {
+        this.$.editButton.style.display = 'none';
+        this.$.deleteButton.style.display = 'none';
+      }
+    });
+  </script>
+</dom-module>
