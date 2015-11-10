@@ -3,7 +3,7 @@
   "authors": [
     "Carlos Cerrillos <carlos@cerrillostech.com>"
   ],
-  "description": "",
+  "description": "Generic item management with action buttons",
   "main": "ctech-item-managers.html",
   "moduleType": [],
   "license": "Closed Source",
@@ -17,10 +17,12 @@
     "tests"
   ],
   "dependencies": {
-    "iron-elements": "PolymerElements/iron-elements#~1",
-    "neon-elements": "PolymerElements/neon-elements#~1",
-    "paper-elements": "PolymerElements/paper-elements#~1",
     "polymer": "~1",
+    "paper-tabs": "PolymerElements/paper-tabs#~1",
+    "paper-material": "PolymerElements/paper-material#~1",
+    "paper-fab": "PolymerElements/#paper-fab~1",
+    "ctech-menubar-selector": "#~1",
+    "iron-icons": "PolymerElements/#iron-icons~1",
     "neon-animation": "PolymerElements/neon-animation#~1"
   }
 }
