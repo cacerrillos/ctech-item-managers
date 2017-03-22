@@ -210,8 +210,10 @@
         this.$.selector.select(e);
       },
       ready: function() {
-        this.$.editButton.style.display = 'none';
-        this.$.deleteButton.style.display = 'none';
+        if(this.$.editButton != undefined)
+          this.$.editButton.style.display = 'none';
+        if(this.$.deleteButton != undefined)
+          this.$.deleteButton.style.display = 'none';
       }
     });
   </script>
